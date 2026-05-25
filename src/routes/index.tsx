@@ -517,14 +517,14 @@ function DeepShieldDashboard() {
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Loading history…
                 </div>
-              ) : history.length === 1 ? (
+              ) : history.length === 0 ? (
                 <div className="py-8 text-center text-sm text-muted-foreground">
                   <ImageIcon className="mx-auto mb-2 h-8 w-8 opacity-40" />
                   No scans yet. Upload an image to get started.
                 </div>
               ) : (
                 <ul className="flex flex-col gap-2">
-                  {history.slice(1, 50).map((item) => (
+                  {history.slice(0, 50).map((item) => (
                     <li
                       key={item.id}
                       className="flex items-center gap-3 rounded-xl border border-[oklch(1_0_0/0.06)] bg-[oklch(1_0_0/0.03)] px-3 py-2.5"
