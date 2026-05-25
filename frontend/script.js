@@ -27,17 +27,25 @@ function toast(msg, type = "") {
   t.textContent = msg;
   t.className = "toast " + type;
   setTimeout(() => t.classList.add("hidden"), 50);
-  setTimeout(() => { t.classList.remove("hidden"); }, 60);
+  setTimeout(() => {
+    t.classList.remove("hidden");
+  }, 60);
   clearTimeout(window.__toastT);
   window.__toastT = setTimeout(() => t.classList.add("hidden"), 3200);
 }
 
 /* ---------- local history fallback ---------- */
 function loadLocal() {
-  try { return JSON.parse(localStorage.getItem(LS_KEY)) || []; } catch { return []; }
+  try {
+    return JSON.parse(localStorage.getItem(LS_KEY)) || [];
+  } catch {
+    return [];
+  }
 }
 function saveLocal(items) {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(items)); } catch {}
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(items));
+  } catch {}
 }
 function pushLocal(entry) {
   const items = loadLocal();
@@ -78,7 +86,9 @@ async function predict(file) {
   const timeout = setTimeout(() => controller.abort(), 30000);
   try {
     const r = await fetch(`${API_BASE_URL}/predict`, {
-      method: "POST", body: fd, signal: controller.signal,
+      method: "POST",
+      body: fd,
+      signal: controller.signal,
     });
     clearTimeout(timeout);
     const data = await r.json().catch(() => ({}));
@@ -111,14 +121,23 @@ function setFile(file) {
 
 dropzone.addEventListener("click", () => fileInput.click());
 dropzone.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInput.click(); }
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    fileInput.click();
+  }
 });
 fileInput.addEventListener("change", (e) => setFile(e.target.files[0]));
-["dragenter", "dragover"].forEach(ev =>
-  dropzone.addEventListener(ev, (e) => { e.preventDefault(); dropzone.classList.add("drag"); })
+["dragenter", "dragover"].forEach((ev) =>
+  dropzone.addEventListener(ev, (e) => {
+    e.preventDefault();
+    dropzone.classList.add("drag");
+  }),
 );
-["dragleave", "drop"].forEach(ev =>
-  dropzone.addEventListener(ev, (e) => { e.preventDefault(); dropzone.classList.remove("drag"); })
+["dragleave", "drop"].forEach((ev) =>
+  dropzone.addEventListener(ev, (e) => {
+    e.preventDefault();
+    dropzone.classList.remove("drag");
+  }),
 );
 dropzone.addEventListener("drop", (e) => {
   const file = e.dataTransfer.files?.[0];
@@ -177,7 +196,7 @@ function showResult({ result, confidence }) {
 /* ---------- dashboard ---------- */
 function computeStats(items) {
   const total = items.length;
-  const fake = items.filter(i => i.result === "FAKE").length;
+  const fake = items.filter((i) => i.result === "FAKE").length;
   const real = total - fake;
   const fakeRate = total ? (fake / total) * 100 : 0;
   const avg = total ? items.reduce((s, i) => s + Number(i.confidence || 0), 0) / total : 0;
@@ -197,7 +216,7 @@ function renderHistory(items) {
     list.innerHTML = `<li class="empty">No scans yet. Upload an image to get started.</li>`;
     return;
   }
-  items.slice(0, 50).forEach(it => {
+  items.slice(0, 50).forEach((it) => {
     const li = document.createElement("li");
     const isReal = it.result === "REAL";
     const ts = it.timestamp ? new Date(it.timestamp).toLocaleString() : "—";
@@ -213,46 +232,72 @@ function renderHistory(items) {
 function renderCharts(items) {
   const s = computeStats(items);
   // pie
-  const pieData = { labels: ["Real", "Fake"], datasets: [{
-    data: [s.real, s.fake],
-    backgroundColor: ["rgba(46,224,165,.85)", "rgba(255,93,122,.85)"],
-    borderColor: "rgba(255,255,255,.08)", borderWidth: 1,
-  }]};
+  const pieData = {
+    labels: ["Real", "Fake"],
+    datasets: [
+      {
+        data: [s.real, s.fake],
+        backgroundColor: ["rgba(46,224,165,.85)", "rgba(255,93,122,.85)"],
+        borderColor: "rgba(255,255,255,.08)",
+        borderWidth: 1,
+      },
+    ],
+  };
   if (!pieChart) {
     pieChart = new Chart($("pie-chart"), {
-      type: "doughnut", data: pieData,
+      type: "doughnut",
+      data: pieData,
       options: {
-        responsive: true, maintainAspectRatio: false, cutout: "65%",
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "65%",
         plugins: { legend: { labels: { color: "#cfd6ff" } } },
       },
     });
   } else {
-    pieChart.data = pieData; pieChart.update();
+    pieChart.data = pieData;
+    pieChart.update();
   }
   // line - chronological
   const chrono = [...items].sort((a, b) => (a.timestamp || "").localeCompare(b.timestamp || ""));
   const labels = chrono.map((_, i) => `#${i + 1}`);
-  const values = chrono.map(i => Number(i.confidence || 0));
-  const lineData = { labels, datasets: [{
-    label: "Confidence", data: values,
-    borderColor: "rgba(124, 92, 255, 1)",
-    backgroundColor: "rgba(124, 92, 255, .2)",
-    tension: .35, fill: true, pointRadius: 3,
-  }]};
+  const values = chrono.map((i) => Number(i.confidence || 0));
+  const lineData = {
+    labels,
+    datasets: [
+      {
+        label: "Confidence",
+        data: values,
+        borderColor: "rgba(124, 92, 255, 1)",
+        backgroundColor: "rgba(124, 92, 255, .2)",
+        tension: 0.35,
+        fill: true,
+        pointRadius: 3,
+      },
+    ],
+  };
   if (!lineChart) {
     lineChart = new Chart($("line-chart"), {
-      type: "line", data: lineData,
+      type: "line",
+      data: lineData,
       options: {
-        responsive: true, maintainAspectRatio: false,
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
           x: { ticks: { color: "#8a93c2" }, grid: { color: "rgba(255,255,255,.05)" } },
-          y: { min: 0, max: 100, ticks: { color: "#8a93c2" }, grid: { color: "rgba(255,255,255,.05)" } },
+          y: {
+            min: 0,
+            max: 100,
+            ticks: { color: "#8a93c2" },
+            grid: { color: "rgba(255,255,255,.05)" },
+          },
         },
         plugins: { legend: { labels: { color: "#cfd6ff" } } },
       },
     });
   } else {
-    lineChart.data = lineData; lineChart.update();
+    lineChart.data = lineData;
+    lineChart.update();
   }
 }
 
