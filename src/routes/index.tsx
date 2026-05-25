@@ -524,7 +524,7 @@ function DeepShieldDashboard() {
                 </div>
               ) : (
                 <ul className="flex flex-col gap-2">
-                  {history.slice(1, 50).map((item) => (
+                  {history.slice(0, 50).map((item) => (
                     <li
                       key={item.id}
                       className="flex items-center gap-3 rounded-xl border border-[oklch(1_0_0/0.06)] bg-[oklch(1_0_0/0.03)] px-3 py-2.5"
