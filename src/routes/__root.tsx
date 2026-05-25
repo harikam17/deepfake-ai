@@ -87,6 +87,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@DeepShieldAI" },
+      { name: "twitter:title", content: "DeepShield AI — Deepfake Detection" },
+      { name: "description", content: "Guardian AI is a web application for detecting deepfake images with an AI-powered analytics dashboard." },
+      { property: "og:description", content: "Guardian AI is a web application for detecting deepfake images with an AI-powered analytics dashboard." },
+      { name: "twitter:description", content: "Guardian AI is a web application for detecting deepfake images with an AI-powered analytics dashboard." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7901e28d-020d-4d41-bf42-118d6f20b384/id-preview-27cad554--e0e724a1-32d2-43d5-9181-f122e85b78aa.lovable.app-1779729396892.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7901e28d-020d-4d41-bf42-118d6f20b384/id-preview-27cad554--e0e724a1-32d2-43d5-9181-f122e85b78aa.lovable.app-1779729396892.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
