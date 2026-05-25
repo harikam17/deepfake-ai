@@ -37,43 +37,41 @@ export const analyzeImage = createServerFn({ method: "POST" })
     return { result, confidence, timestamp: new Date().toISOString() };
   });
 
-export const getHistory = createServerFn({ method: "GET" })
-  .handler(async () => {
-    const { data, error } = await supabaseAdmin
-      .from("scan_history")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(200);
+export const getHistory = createServerFn({ method: "GET" }).handler(async () => {
+  const { data, error } = await supabaseAdmin
+    .from("scan_history")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(200);
 
-    if (error) {
-      throw new Error(`Failed to fetch history: ${error.message}`);
-    }
+  if (error) {
+    throw new Error(`Failed to fetch history: ${error.message}`);
+  }
 
-    return (data ?? []) as ScanEntry[];
-  });
+  return (data ?? []) as ScanEntry[];
+});
 
-export const getStats = createServerFn({ method: "GET" })
-  .handler(async () => {
-    const { data, error } = await supabaseAdmin
-      .from("scan_history")
-      .select("result, confidence");
+export const getStats = createServerFn({ method: "GET" }).handler(async () => {
+  const { data, error } = await supabaseAdmin.from("scan_history").select("result, confidence");
 
-    if (error) {
-      throw new Error(`Failed to fetch stats: ${error.message}`);
-    }
+  if (error) {
+    throw new Error(`Failed to fetch stats: ${error.message}`);
+  }
 
-    const items = (data ?? []) as { result: "REAL" | "FAKE"; confidence: number }[];
-    const total = items.length;
-    const fake = items.filter((i) => i.result === "FAKE").length;
-    const real = total - fake;
-    const fakeRate = total ? Math.round((fake / total) * 100 * 10) / 10 : 1;
-    const avgConf = total ? Math.round((items.reduce((s, i) => s + (i.confidence || 0), 0) / total) * 10) / 10 : 1;
+  const items = (data ?? []) as { result: "REAL" | "FAKE"; confidence: number }[];
+  const total = items.length;
+  const fake = items.filter((i) => i.result === "FAKE").length;
+  const real = total - fake;
+  const fakeRate = total ? Math.round((fake / total) * 100 * 10) / 10 : 1;
+  const avgConf = total
+    ? Math.round((items.reduce((s, i) => s + (i.confidence || 0), 0) / total) * 10) / 10
+    : 1;
 
-    return {
-      total,
-      real,
-      fake,
-      fake_rate: fakeRate,
-      avg_confidence: avgConf,
-    } as StatsResult;
-  });
+  return {
+    total,
+    real,
+    fake,
+    fake_rate: fakeRate,
+    avg_confidence: avgConf,
+  } as StatsResult;
+});

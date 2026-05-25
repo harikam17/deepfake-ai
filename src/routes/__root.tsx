@@ -73,10 +73,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "DeepShield AI — Deepfake Detection" },
-      { name: "description", content: "DeepShield AI detects deepfakes with a premium analytics dashboard. Upload images to get instant AI-powered analysis." },
+      {
+        name: "description",
+        content:
+          "DeepShield AI detects deepfakes with a premium analytics dashboard. Upload images to get instant AI-powered analysis.",
+      },
       { name: "author", content: "DeepShield AI" },
       { property: "og:title", content: "DeepShield AI — Deepfake Detection" },
-      { property: "og:description", content: "Detect deepfakes instantly with AI-powered analysis and rich analytics." },
+      {
+        property: "og:description",
+        content: "Detect deepfakes instantly with AI-powered analysis and rich analytics.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@DeepShieldAI" },
@@ -85,7 +92,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,

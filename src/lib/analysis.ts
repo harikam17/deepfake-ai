@@ -97,10 +97,7 @@ export function analyzePixels(normalized: Float32Array): AnalysisResult {
   }
   const hf = hashFactorFromBytes(recon);
 
-  let score =
-    0.55 * Math.min(varVal * 6, 1.0) +
-    0.25 * Math.min(edgeEnergy * 50, 1.0) +
-    0.20 * hf;
+  let score = 0.55 * Math.min(varVal * 6, 1.0) + 0.25 * Math.min(edgeEnergy * 50, 1.0) + 0.2 * hf;
   score = Math.max(0.0, Math.min(1.0, score));
 
   let result: "REAL" | "FAKE";

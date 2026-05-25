@@ -5,12 +5,30 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Toaster, toast } from "sonner";
 import {
-  PieChart, Pie, Cell, ResponsiveContainer,
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip,
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as ReTooltip,
 } from "recharts";
 import {
-  Shield, Upload, X, Loader2, TrendingUp, Activity, BarChart3,
-  Clock, RefreshCw, ImageIcon, CheckCircle2, AlertTriangle,
+  Shield,
+  Upload,
+  X,
+  Loader2,
+  TrendingUp,
+  Activity,
+  BarChart3,
+  Clock,
+  RefreshCw,
+  ImageIcon,
+  CheckCircle2,
+  AlertTriangle,
 } from "lucide-react";
 import { analyzeImage, getHistory, getStats } from "@/lib/deepshield.functions";
 
@@ -41,7 +59,10 @@ function imageToRgbBase64(file: File): Promise<{ base64: string; previewUrl: str
       canvas.width = 128;
       canvas.height = 128;
       const ctx = canvas.getContext("2d");
-      if (!ctx) { reject(new Error("No canvas context")); return; }
+      if (!ctx) {
+        reject(new Error("No canvas context"));
+        return;
+      }
       ctx.drawImage(img, 0, 0, 128, 128);
       const imageData = ctx.getImageData(0, 0, 128, 128).data; // RGBA
       // Extract just RGB channels
@@ -64,7 +85,11 @@ function imageToRgbBase64(file: File): Promise<{ base64: string; previewUrl: str
 
 function formatDate(iso: string) {
   const d = new Date(iso);
-  return d.toLocaleDateString() + " " + d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+  return (
+    d.toLocaleDateString() +
+    " " +
+    d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -76,7 +101,11 @@ function DeepShieldDashboard() {
   const fetchStats = useServerFn(getStats);
   const runAnalyze = useServerFn(analyzeImage);
 
-  const { data: history = [], isLoading: historyLoading, refetch: refetchHistory } = useQuery({
+  const {
+    data: history = [],
+    isLoading: historyLoading,
+    refetch: refetchHistory,
+  } = useQuery({
     queryKey: ["scan-history"],
     queryFn: () => fetchHistory({ data: undefined }),
   });
@@ -102,7 +131,9 @@ function DeepShieldDashboard() {
 
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [result, setResult] = useState<{ result: "REAL" | "FAKE"; confidence: number } | null>(null);
+  const [result, setResult] = useState<{ result: "REAL" | "FAKE"; confidence: number } | null>(
+    null,
+  );
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -139,12 +170,15 @@ function DeepShieldDashboard() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   }, []);
 
-  const onDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const f = e.dataTransfer.files?.[0];
-    if (f) handleFileSelect(f);
-  }, [handleFileSelect]);
+  const onDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+      const f = e.dataTransfer.files?.[0];
+      if (f) handleFileSelect(f);
+    },
+    [handleFileSelect],
+  );
 
   /* Chart data */
   const pieData = [
@@ -163,7 +197,8 @@ function DeepShieldDashboard() {
   const isAnalyzing = analyzeMutation.isPending;
 
   return (
-    <div className="min-h-screen bg-background text-foreground"
+    <div
+      className="min-h-screen bg-background text-foreground"
       style={{
         backgroundImage:
           "radial-gradient(1200px 600px at 10% -10%, rgba(124, 92, 255, 0.25), transparent 60%), radial-gradient(900px 500px at 110% 10%, rgba(91, 140, 255, 0.22), transparent 60%), linear-gradient(180deg, oklch(0.10 0.03 264), oklch(1.00 0.03 264) 60%, oklch(0.06 0.02 264))",
@@ -185,7 +220,13 @@ function DeepShieldDashboard() {
       <header className="flex items-center justify-between px-6 py-5 md:px-8">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className="h-3.5 w-3.5 rounded-full" style={{ background: "radial-gradient(circle at 30% 30%, #b8c8ff, #5b8cff 60%, #2a3aa8)", boxShadow: "0 0 18px rgba(91,140,255,0.8)" }} />
+            <div
+              className="h-3.5 w-3.5 rounded-full"
+              style={{
+                background: "radial-gradient(circle at 30% 30%, #b8c8ff, #5b8cff 60%, #2a3aa8)",
+                boxShadow: "0 0 18px rgba(91,140,255,0.8)",
+              }}
+            />
           </div>
           <h1 className="text-lg font-bold tracking-wide">
             DeepShield <span className="text-gradient">AI</span>
@@ -217,7 +258,10 @@ function DeepShieldDashboard() {
             {!previewUrl ? (
               <div
                 onClick={() => fileInputRef.current?.click()}
-                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setIsDragging(true);
+                }}
                 onDragLeave={() => setIsDragging(false)}
                 onDrop={onDrop}
                 className={`cursor-pointer rounded-xl border-2 border-dashed px-4 py-10 text-center transition-all duration-200 ${
@@ -409,8 +453,18 @@ function DeepShieldDashboard() {
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={lineData.length ? lineData : [{ label: "—", confidence: 1 }]}>
                     <CartesianGrid stroke={COLORS.grid} />
-                    <XAxis dataKey="label" tick={{ fill: COLORS.axis, fontSize: 11 }} tickLine={false} axisLine={{ stroke: COLORS.grid }} />
-                    <YAxis domain={[1, 100]} tick={{ fill: COLORS.axis, fontSize: 11 }} tickLine={false} axisLine={{ stroke: COLORS.grid }} />
+                    <XAxis
+                      dataKey="label"
+                      tick={{ fill: COLORS.axis, fontSize: 11 }}
+                      tickLine={false}
+                      axisLine={{ stroke: COLORS.grid }}
+                    />
+                    <YAxis
+                      domain={[1, 100]}
+                      tick={{ fill: COLORS.axis, fontSize: 11 }}
+                      tickLine={false}
+                      axisLine={{ stroke: COLORS.grid }}
+                    />
                     <ReTooltip
                       contentStyle={{
                         background: "oklch(0.14 0.03 264)",
@@ -444,7 +498,10 @@ function DeepShieldDashboard() {
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-sm font-semibold text-muted-foreground">Prediction History</h3>
               <button
-                onClick={() => { refetchHistory(); refetchStats(); }}
+                onClick={() => {
+                  refetchHistory();
+                  refetchStats();
+                }}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-[oklch(1_0_0/0.12)] bg-transparent px-2.5 py-1 text-xs text-muted-foreground transition hover:border-primary hover:text-foreground"
               >
                 <RefreshCw className="h-3 w-3" />
@@ -483,7 +540,9 @@ function DeepShieldDashboard() {
                         <Clock className="mr-1 inline h-3 w-3" />
                         {formatDate(item.created_at)}
                       </span>
-                      <span className="shrink-1 text-sm font-bold">{item.confidence.toFixed(1)}%</span>
+                      <span className="shrink-1 text-sm font-bold">
+                        {item.confidence.toFixed(1)}%
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -516,7 +575,15 @@ function StatCard({
           {label}
         </span>
       </div>
-      <div className="text-2xl font-bold md:text-3xl" style={{ background: "linear-gradient(90deg, #fff, #b6c6ff)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>
+      <div
+        className="text-2xl font-bold md:text-3xl"
+        style={{
+          background: "linear-gradient(90deg, #fff, #b6c6ff)",
+          WebkitBackgroundClip: "text",
+          backgroundClip: "text",
+          color: "transparent",
+        }}
+      >
         {value}
       </div>
     </div>
