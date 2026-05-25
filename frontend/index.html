@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DeepShield AI — Deepfake Detection</title>
+    <meta name="description" content="DeepShield AI detects deepfakes with a premium analytics dashboard." />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo-dot"></div>
+        <h1>DeepShield <span>AI</span></h1>
+      </div>
+      <nav class="status">
+        <span id="api-status" class="pill">Connecting…</span>
+      </nav>
+    </header>
+
+    <main class="grid">
+      <!-- LEFT -->
+      <section class="card glass left-panel">
+        <h2 class="section-title">Upload Image</h2>
+
+        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload image">
+          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 16V4m0 0l-4 4m4-4l4 4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M20 16v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2" stroke-linecap="round"/>
+          </svg>
+          <p><strong>Drag &amp; drop</strong> an image here</p>
+          <p class="muted">or click to browse · JPG / PNG / JPEG</p>
+          <input id="file-input" type="file" accept="image/png,image/jpeg" hidden />
+        </div>
+
+        <div id="preview-card" class="preview hidden">
+          <img id="preview-img" alt="preview" />
+          <div class="preview-meta">
+            <span id="preview-name">image.jpg</span>
+            <button id="clear-btn" class="ghost">Clear</button>
+          </div>
+        </div>
+
+        <button id="detect-btn" class="primary glow" disabled>
+          <span class="btn-label">Detect Deepfake</span>
+          <span class="spinner hidden" aria-hidden="true"></span>
+        </button>
+
+        <div id="result-area" class="result hidden">
+          <div class="result-head">
+            <span id="result-badge" class="badge">—</span>
+            <span id="result-conf" class="conf">0%</span>
+          </div>
+          <div class="bar"><div id="result-bar" class="bar-fill"></div></div>
+        </div>
+      </section>
+
+      <!-- RIGHT -->
+      <section class="right-panel">
+        <h2 class="section-title">AI Analytics Dashboard</h2>
+
+        <div class="stats">
+          <div class="card glass stat">
+            <div class="stat-label">Total Scans</div>
+            <div id="stat-total" class="stat-value">0</div>
+          </div>
+          <div class="card glass stat">
+            <div class="stat-label">Fake Rate</div>
+            <div id="stat-fake-rate" class="stat-value">0%</div>
+          </div>
+          <div class="card glass stat">
+            <div class="stat-label">Avg Confidence</div>
+            <div id="stat-avg" class="stat-value">0%</div>
+          </div>
+        </div>
+
+        <div class="charts">
+          <div class="card glass chart-card">
+            <h3>Real vs Fake</h3>
+            <canvas id="pie-chart"></canvas>
+          </div>
+          <div class="card glass chart-card">
+            <h3>Confidence Trend</h3>
+            <canvas id="line-chart"></canvas>
+          </div>
+        </div>
+
+        <div class="card glass history-card">
+          <div class="history-head">
+            <h3>Prediction History</h3>
+            <button id="refresh-btn" class="ghost small">Refresh</button>
+          </div>
+          <ul id="history-list" class="history-list"></ul>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
