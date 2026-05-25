@@ -1,5 +1,5 @@
 /* DeepShield AI - frontend logic */
-const API_BASE_URL = "http://127.0.0.1:5000"; // change to your deployed backend URL
+const API_BASE_URL = "https://deepfake-ai-gp3d.onrender.com"; // change to your deployed backend URL
 const LS_KEY = "deepshield_history_v1";
 
 const $ = (id) => document.getElementById(id);
