@@ -159,8 +159,9 @@ function DeepShieldDashboard() {
       const { base64, previewUrl: _url } = await imageToRgbBase64(file);
       const data = await analyzeMutation.mutateAsync({ imageData: base64, filename: file.name });
       setResult(data);
-    } catch (e: any) {
-      toast.error(e?.message || "Could not analyze image");
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : "Could not analyze image";
+      toast.error(message);
     }
   }, [file, analyzeMutation]);
 
