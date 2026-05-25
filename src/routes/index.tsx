@@ -124,8 +124,9 @@ function DeepShieldDashboard() {
       queryClient.invalidateQueries({ queryKey: ["scan-history"] });
       queryClient.invalidateQueries({ queryKey: ["scan-stats"] });
     },
-    onError: (err: any) => {
-      toast.error(err?.message || "Analysis failed");
+    onError: (err: unknown) => {
+      const message = err instanceof Error ? err.message : "Analysis failed";
+      toast.error(message);
     },
   });
 
