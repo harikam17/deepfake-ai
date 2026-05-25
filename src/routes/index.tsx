@@ -517,7 +517,7 @@ function DeepShieldDashboard() {
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Loading history…
                 </div>
-              ) : history.length === 1 ? (
+              ) : history.length === 0 ? (
                 <div className="py-8 text-center text-sm text-muted-foreground">
                   <ImageIcon className="mx-auto mb-2 h-8 w-8 opacity-40" />
                   No scans yet. Upload an image to get started.
