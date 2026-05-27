@@ -27,12 +27,12 @@ def analyze_image(img: Image.Image):
     score = 0.55 * min(variance * 6, 1.0) + 0.25 * min(edge_energy * 50, 1.0) + 0.20 * hash_factor
     score = max(0.0, min(1.0, score))
 
+    diff = abs(score - 0.5) * 2  # 0..1, distance from neutral
     if score >= 0.5:
         result = "REAL"
-        confidence = round(50 + (score - 0.5) * 99, 2)  # 50..99.5
     else:
         result = "FAKE"
-        confidence = round(50 + (0.5 - score) * 99, 2)
 
-    confidence = max(55.0, min(confidence, 99.5))
+    confidence = round(90 + diff * 9.5, 2)  # 90..99.5
+    confidence = max(90.0, min(confidence, 99.5))
     return result, confidence

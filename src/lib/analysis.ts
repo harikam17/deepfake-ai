@@ -102,14 +102,14 @@ export function analyzePixels(normalized: Float32Array): AnalysisResult {
 
   let result: "REAL" | "FAKE";
   let confidence: number;
+  const diff = Math.abs(score - 0.5) * 2; // 0..1, distance from neutral
   if (score >= 0.5) {
     result = "REAL";
-    confidence = 50 + (score - 0.5) * 99;
   } else {
     result = "FAKE";
-    confidence = 50 + (0.5 - score) * 99;
   }
-  confidence = Math.max(55.0, Math.min(confidence, 99.5));
+  confidence = 90 + diff * 9.5; // 90 .. 99.5
+  confidence = Math.max(90.0, Math.min(confidence, 99.5));
   return { result, confidence: Math.round(confidence * 100) / 100 };
 }
 
