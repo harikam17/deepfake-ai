@@ -33,6 +33,6 @@ def analyze_image(img: Image.Image):
     else:
         result = "FAKE"
 
-    confidence = round(90 + diff * 9.5, 2)  # 90..99.5
-    confidence = max(90.0, min(confidence, 99.5))
+    confidence = round(90 + diff * 10, 2)  # 90..100
+    confidence = max(90.0, min(confidence, 100.0))
     return result, confidence
