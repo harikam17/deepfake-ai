@@ -108,8 +108,8 @@ export function analyzePixels(normalized: Float32Array): AnalysisResult {
   } else {
     result = "FAKE";
   }
-  confidence = 90 + diff * 9.5; // 90 .. 99.5
-  confidence = Math.max(90.0, Math.min(confidence, 99.5));
+  confidence = 90 + diff * 10; // 90 .. 100
+  confidence = Math.max(90.0, Math.min(confidence, 100.0));
   return { result, confidence: Math.round(confidence * 100) / 100 };
 }
 
