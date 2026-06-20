@@ -24,11 +24,17 @@ export const analyzeImage = createServerFn({ method: "POST" })
     const normalized = base64ToNormalizedPixels(data.imageData);
     const { result, confidence } = analyzePixels(normalized);
 
+    // Anonymize filename: store only the extension to avoid exposing
+    // user-identifying information through the public scan history.
+    const ext = (data.filename.split(".").pop() ?? "").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8);
+    const safeName = ext ? `image.${ext}` : "image";
+
     const { error } = await supabaseAdmin.from("scan_history").insert({
       result,
       confidence,
-      filename: data.filename,
+      filename: safeName,
     });
+
 
     if (error) {
       throw new Error(`Failed to save scan: ${error.message}`);
