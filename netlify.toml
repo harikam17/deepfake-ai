@@ -1,0 +1,7 @@
+[build]
+  publish = "frontend"
+  command = "echo 'window.__API_BASE_URL__ = \"'$API_BASE_URL'\";' > frontend/config.js"
+
+# Static site — no framework build needed.
+# Set API_BASE_URL in Netlify → Site settings → Environment variables
+# to your Render URL, e.g. https://deepshield-backend.onrender.com
