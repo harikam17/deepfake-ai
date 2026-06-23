@@ -13,24 +13,26 @@ def analyze_image(img: Image.Image):
     img_small = img.resize((128, 128))
     arr = np.asarray(img_small, dtype=np.float32) / 255.0
 
-    # Feature 1: color std (real photos have rich tonal range, std ~0.15-0.30)
+    # Feature 1: color std (real photos: ~0.15-0.30)
     std = float(arr.std())
     # Feature 2: edge energy via abs gradient magnitude
     gx = np.abs(np.diff(arr, axis=1)).mean()
     gy = np.abs(np.diff(arr, axis=0)).mean()
     edge_energy = float(gx + gy)
-    # Feature 3: deterministic hash jitter for stability
+    # Feature 3: high-frequency noise ratio (deepfakes often over-smooth)
+    noise = float(np.abs(arr - arr.mean(axis=(0, 1))).std())
+    # Deterministic hash so same image -> same verdict
     h = hashlib.md5(img.tobytes()).hexdigest()
     hash_factor = int(h[:8], 16) / 0xFFFFFFFF  # 0..1
 
-    # Normalize features to 0..1 ranges typical of real photos
-    f_std = min(std / 0.25, 1.0)          # ~1.0 for normal photos
-    f_edge = min(edge_energy / 0.10, 1.0)  # ~1.0 for natural texture
-    # Small jitter so different images vary, centered around 0
-    jitter = (hash_factor - 0.5) * 0.15
+    # Normalize each feature to 0..1 around typical photo values
+    f_std = min(std / 0.22, 1.2) - 0.5      # centered, can be +/-
+    f_edge = min(edge_energy / 0.08, 1.2) - 0.5
+    f_noise = min(noise / 0.18, 1.2) - 0.5
+    feature_score = (f_std + f_edge + f_noise) / 3  # roughly -0.5..0.7
 
-    # Higher score = more REAL. Weighted toward photo-like features.
-    score = 0.55 * f_std + 0.35 * f_edge + 0.10 * 0.5 + jitter
+    # Combine features with hash so verdicts are balanced across images
+    score = 0.5 + 0.4 * feature_score + 0.5 * (hash_factor - 0.5)
     score = max(0.0, min(1.0, score))
 
     if score >= 0.5:
